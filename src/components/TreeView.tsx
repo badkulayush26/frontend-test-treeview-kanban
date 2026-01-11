@@ -263,10 +263,8 @@ const TreeView: React.FC<TreeViewProps> = ({ data, onChange }) => {
   );
 
   const handleDragOver = useCallback((event: React.DragEvent) => {
-    if (event.dataTransfer.types.includes(DRAG_TYPE)) {
-      event.preventDefault();
-      event.dataTransfer.dropEffect = "move";
-    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
   }, []);
 
   const renderNode = (node: TreeNode, depth: number) => {

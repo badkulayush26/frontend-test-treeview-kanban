@@ -91,10 +91,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ columns, onChange }) => {
   );
 
   const handleDragOver = useCallback((event: React.DragEvent) => {
-    if (event.dataTransfer.types.includes(DRAG_CARD_TYPE)) {
-      event.preventDefault();
-      event.dataTransfer.dropEffect = "move";
-    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
   }, []);
 
   const handleDrop = useCallback(
@@ -107,9 +105,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ columns, onChange }) => {
       const payload = JSON.parse(raw) as DragCardInfo;
       const { cardId, fromColumnId } = payload;
       if (!cardId) {
-        return;
-      }
-      if (fromColumnId === targetColumnId) {
         return;
       }
       const next: Column[] = state.map((col) => {
@@ -132,6 +127,56 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ columns, onChange }) => {
     [notifyChange, state]
   );
 
+  const handleDropOnCard = useCallback(
+    (
+      event: React.DragEvent,
+      targetColumnId: ColumnId,
+      targetCardId: string
+    ) => {
+      event.preventDefault();
+      const raw = event.dataTransfer.getData(DRAG_CARD_TYPE);
+      if (!raw) {
+        return;
+      }
+      const payload = JSON.parse(raw) as DragCardInfo;
+      const { cardId, fromColumnId } = payload;
+      if (!cardId || cardId === targetCardId) {
+        return;
+      }
+
+      const sourceColumn = state.find((col) => col.id === fromColumnId);
+      if (!sourceColumn) {
+        return;
+      }
+      const movingCard = sourceColumn.cards.find((c) => c.id === cardId);
+      if (!movingCard) {
+        return;
+      }
+
+      const withoutCard: Column[] = state.map((col) =>
+        col.id === fromColumnId
+          ? { ...col, cards: col.cards.filter((c) => c.id !== cardId) }
+          : col
+      );
+
+      const next: Column[] = withoutCard.map((col) => {
+        if (col.id !== targetColumnId) {
+          return col;
+        }
+        const index = col.cards.findIndex((c) => c.id === targetCardId);
+        if (index === -1) {
+          return col;
+        }
+        const cards = [...col.cards];
+        cards.splice(index, 0, movingCard);
+        return { ...col, cards };
+      });
+
+      notifyChange(next);
+    },
+    [notifyChange, state]
+  );
+
   return (
     <div
       style={{
@@ -147,15 +192,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ columns, onChange }) => {
       {state.map((column) => (
         <div
           key={column.id}
-          style={{
-            minWidth: 260,
-            maxWidth: 320,
-            background: "#f7f7f7",
-            borderRadius: 12,
-            padding: 12,
-            boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-            flex: 1,
-          }}
+          className="bg-[#f7f7f7] rounded-[12px] p-[12px] shadow-[0_1px_3px_rgba(0,0,0,0.08)] flex-[1_1_0%]"
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, column.id)}
         >
@@ -223,6 +260,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ columns, onChange }) => {
                 key={card.id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, column.id, card.id)}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDropOnCard(e, column.id, card.id)}
                 style={{
                   background: "#fff",
                   borderRadius: 8,
