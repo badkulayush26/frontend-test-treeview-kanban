@@ -280,15 +280,7 @@ const TreeView: React.FC<TreeViewProps> = ({ data, onChange }) => {
     return (
       <div key={node.id}>
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "4px 8px",
-            margin: "4px 0",
-            borderRadius: 8,
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-            background: "#fff",
-          }}
+          className="flex items-center p-[4px_8px] m-[4px_0] rounded-[8px] shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-[#fff]"
           draggable
           onDragStart={(e) => handleDragStart(e, node.id)}
           onDragOver={handleDragOver}
@@ -298,38 +290,16 @@ const TreeView: React.FC<TreeViewProps> = ({ data, onChange }) => {
             type="button"
             onClick={() => toggleExpand(node)}
             disabled={!canExpand}
-            style={{
-              width: 20,
-              height: 20,
-              marginRight: 8,
-              borderRadius: 10,
-              border: "none",
-              background: "transparent",
-              cursor: canExpand ? "pointer" : "default",
-              fontSize: 14,
-            }}
+            className="w-[20px] h-[20px] mr-[8px] rounded-[10px] border-none bg-transparent cursor-pointer text-[14px]"
           >
             {canExpand ? (isExpanded ? "▾" : "▸") : ""}
           </button>
-          <div
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 14,
-              background: circleColor,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fff",
-              fontWeight: 600,
-              marginRight: 8,
-            }}
-          >
+          <div className="w-[28px] h-[28px] rounded-[14px] bg-[#1e8fff] flex items-center justify-center text-[#fff] font-[600] mr-[8px]">
             {node.label[0] ?? "?"}
           </div>
           <div
             onDoubleClick={() => setEditingId(node.id)}
-            style={{ flex: 1, display: "flex", alignItems: "center", gap: 8 }}
+            className="flex-[1_1_0%] items-center gap-[8px]"
           >
             {editingId === node.id ? (
               <input
@@ -350,66 +320,33 @@ const TreeView: React.FC<TreeViewProps> = ({ data, onChange }) => {
                     setEditingId(null);
                   }
                 }}
-                style={{
-                  flex: 1,
-                  padding: "2px 4px",
-                  borderRadius: 4,
-                  border: "1px solid #ccc",
-                  fontSize: 14,
-                }}
+                className="flex-[1_1_0%] p-[2px_4px] rounded-[4px] border-[1px_solid_#ccc] text-[14px]"
               />
             ) : (
-              <span style={{ fontSize: 14 }}>{node.label}</span>
+              <span className="text-[14px]">{node.label}</span>
             )}
-            <span style={{ fontSize: 12, color: "#999" }}>Level A</span>
+            <span className="text-[12px] text-[#999]">Level A</span>
           </div>
           <button
             type="button"
             onClick={() => handleAddChild(node.id)}
-            style={{
-              marginLeft: 8,
-              width: 24,
-              height: 24,
-              borderRadius: 6,
-              border: "none",
-              background: "#f5f5f5",
-              cursor: "pointer",
-              fontSize: 16,
-            }}
+            className="w-[24px] h-[24px] ml-[8px] rounded-[6px] border-none bg-[#f5f5f5] cursor-pointer text-[16px]"
           >
             +
           </button>
           <button
             type="button"
             onClick={() => handleDelete(node.id)}
-            style={{
-              marginLeft: 4,
-              width: 24,
-              height: 24,
-              borderRadius: 6,
-              border: "none",
-              background: "#ffe5e5",
-              cursor: "pointer",
-              fontSize: 14,
-              color: "#c00",
-            }}
+            className="w-[24px] h-[24px] ml-[4px] rounded-[6px] border-none bg-[#ffe5e5] cursor-pointer text-[14px] text-[#c00]"
           >
             ×
           </button>
           {isLoading && (
-            <span style={{ marginLeft: 8, fontSize: 12, color: "#999" }}>
-              Loading...
-            </span>
+            <span className="ml-[8px] text-[12px] text-[#999]">Loading...</span>
           )}
         </div>
         {showChildren && (
-          <div
-            style={{
-              marginLeft: 40,
-              borderLeft: "1px dashed #ddd",
-              paddingLeft: 16,
-            }}
-          >
+          <div className="ml-[40px] border-l-[1px] border-dashed border-[#ddd] pl-[16px]">
             {node.children!.map((child) => renderNode(child, depth + 1))}
           </div>
         )}
@@ -422,42 +359,20 @@ const TreeView: React.FC<TreeViewProps> = ({ data, onChange }) => {
       <div
         onDragOver={handleDragOver}
         onDrop={(e) => handleDrop(e, null)}
-        style={{ minHeight: 24 }}
+        className="min-h-[24px]"
       />
     ),
     [handleDragOver, handleDrop]
   );
 
   return (
-    <div
-      style={{
-        background: "#fafafa",
-        padding: 16,
-        borderRadius: 12,
-        border: "1px solid #eee",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 8,
-        }}
-      >
-        <h3 style={{ margin: 0, fontSize: 16 }}>Tree View</h3>
+    <div className="bg-[#fafafa] p-[16px] rounded-[12px] border-[1px] border-[#eee]">
+      <div className="flex justify-between items-center mb-[8px]">
+        <h3 className="text-[16px] font-bold">Tree View</h3>
         <button
           type="button"
           onClick={() => handleAddChild(null)}
-          style={{
-            padding: "4px 8px",
-            borderRadius: 6,
-            border: "none",
-            background: "#1e8fff",
-            color: "#fff",
-            cursor: "pointer",
-            fontSize: 13,
-          }}
+          className="px-[8px] py-[4px] rounded-[6px] border-none bg-[#1e8fff] text-[#fff] cursor-pointer text-[13px]"
         >
           Add root node
         </button>
