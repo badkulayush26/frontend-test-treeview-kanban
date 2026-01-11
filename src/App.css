@@ -1,0 +1,49 @@
+.app-root {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.app-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.app-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.app-section h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
